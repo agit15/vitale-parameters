@@ -4,6 +4,7 @@ import { TableService } from './table.service';
 import { VitalParameters } from '../models/vital-parameters.model';
 import { Sort } from '@angular/material/sort';
 import { ToastService } from './toast-service';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-table',
@@ -19,12 +20,9 @@ export class TableComponent {
   idAdd: number;
   sortedData: VitalParameters[];
   constoptions;
-
-  constructor(private _tableService: TableService, public toastService: ToastService) {
-    this.tableData = this._tableService.getData();
-    this.headerTitles = this._tableService.getHeaderTitles();
-    this.sortedData = this.tableData.slice();
-  }
+  closeResult: string;
+  deleteParam: any;
+  addParam = new VitalParameters(null, null, null, null, null, null, null, null, null, null, null, null, null);
 
   hr = [
     null,
@@ -39,7 +37,7 @@ export class TableComponent {
     15,
     20
   ]
-  
+
   hf = [
     null,
     0,
@@ -69,7 +67,7 @@ export class TableComponent {
     80,
   ]
 
-  bps= [
+  bps = [
     null,
     110,
     115,
@@ -77,7 +75,7 @@ export class TableComponent {
     145,
   ]
 
-  bpd= [
+  bpd = [
     null,
     80,
     85,
@@ -99,17 +97,22 @@ export class TableComponent {
     83,
   ]
 
-  verwijderen(data){
-    this._tableService.deleteVitalParameter(data);
+  constructor(private _tableService: TableService, public toastService: ToastService, private modalService: NgbModal) {
+    this.tableData = this._tableService.getData();
+    this.headerTitles = this._tableService.getHeaderTitles();
+    this.sortedData = this.tableData.slice();
+  }
+
+  verwijderen() {
+    this._tableService.deleteVitalParameter(this.deleteParam);
     this.tableData = this._tableService.getData();
     this.sortedData = this.tableData.slice();
     this.toastService.show('Verwijderd!', { classname: 'bg-success text-light', delay: 5000 });
-    this.constoptions = { positionClass:'toast-custom' };
-    console.log(this.tableData);
-    
+    this.constoptions = { positionClass: 'toast-custom' };
+    this.deleteParam = null;
   }
 
-  add(){
+  add() {
     let now = new Date();
     this.idAdd = this.tableData[this.tableData.length - 1].id + 1;
     let vitalParameters = new VitalParameters(this.idAdd, now, null, null, null, null, null, null, null, null, null, null, null);
@@ -119,7 +122,20 @@ export class TableComponent {
     this.edit(this.idAdd);
   }
 
-  edit(val){
+  add2() {
+    let now = new Date();
+    this.idAdd = this.tableData[this.tableData.length - 1].id + 1;
+    this.addParam.id = this.idAdd;
+    this.addParam.tijd = now;
+    this.addParam.gebruiker = "Agit";
+    this._tableService.addVitalParameter(this.addParam);
+    this.tableData = this._tableService.getData();
+    this.sortedData = this.tableData.slice();
+    this.addParam = new VitalParameters(null, null, null, null, null, null, null, null, null, null, null, null, null);
+    this.toastService.show('Toegevoegd!', { classname: 'bg-success text-light', delay: 5000 });
+  }
+
+  edit(val) {
     this.editRowID = val;
   }
 
@@ -143,10 +159,33 @@ export class TableComponent {
         case 'BPD': return compare(a.bpd, b.bpd, isAsc);
         case 'TEMP': return compare(a.temp, b.temp, isAsc);
         case 'GLUC': return compare(a.gluc, b.gluc, isAsc);
+        case 'Opm.': return compare(a.opm, b.opm, isAsc);
         case 'Gebruiker': return compare(a.gebruiker, b.gebruiker, isAsc);
         default: return 0;
       }
     });
+  }
+
+  open(content, data) {
+    if (data != null) {
+      this.deleteParam = data;
+    }
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+    this.addParam = new VitalParameters(null, null, null, null, null, null, null, null, null, null, null, null, null);
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 }
 

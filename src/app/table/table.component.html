@@ -1,15 +1,15 @@
-<div class="col-lg-12">
+<button type="button" class="btn btn-success m-3" style="font-size:24px" (click)="open(content1, null)"><i class="fas fa-file-medical"></i></button>
+<div class="col-lg-12" style="overflow-x:auto;">
   <table class="table table-bordered table-striped" matSort (matSortChange)="sortData($event)">
     <thead>
       <tr>
         <th *ngFor="let headerTitle of headerTitles" mat-sort-header="{{headerTitle}}">{{headerTitle}}</th>
-        <th><button type="button" class="btn btn-success" (click)="add()">+</button></th>
+        <th><button type="button" class="btn btn-success" (click)="add()"><i class="fa fa-plus"></i></button></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let data of sortedData">
         <td (click)="edit(data.id)">{{data.tijd | date:'H:mm'}}</td>
-
         <td *ngIf="data.id === editRowID">
           <select style="width: fit-content;" class="form-control" [(ngModel)]="data.af">
             <option *ngFor="let a of af" [ngValue]="a">
@@ -99,36 +99,126 @@
             [(ngModel)]="data.gebruiker"></td>
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.gebruiker}}</td>
 
-        <td style="width: 20px;">
-          <button type="button" class="btn btn-danger" (click)="verwijderen(data)">X</button>&nbsp;
+        <td>
+          <button type="button" class="btn btn-danger" (click)="open(content2, data)"><i class="fas fa-times"></i></button>&nbsp;
         </td>
       </tr>
     </tbody>
   </table>
 </div>
 
-<ng-template #content let-modal>
+<ng-template #content1 let-modal>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <h4 class="modal-title" id="modal-basic-title">Vitalparameter</h4>
     <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
-    <form>
-      <div class="form-group">
-        <label for="dateOfBirth">Date of birth</label>
-        <div class="input-group">
-          <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
-          <div class="input-group-append">
-            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
-          </div>
-        </div>
-      </div>
-    </form>
+    <div class="form-group">
+      <label>Ademhalingsfrequentie: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.af">
+        <option *ngFor="let a of af" [ngValue]="a">
+          {{a}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Hartfrequentie: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.hf">
+        <option *ngFor="let h of hf" [ngValue]="h">
+          {{h}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Hartritme: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.hr">
+        <option *ngFor="let h of hr" [ngValue]="h">
+          {{h}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Ademhaling: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.ah">
+        <option *ngFor="let a of ah" [ngValue]="a">
+          {{a}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Saturatie: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.sat">
+        <option *ngFor="let s of sat" [ngValue]="s">
+          {{s}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Bloeddruk Systolisch: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.bps">
+        <option *ngFor="let b of bps" [ngValue]="b">
+          {{b}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Bloeddruk Diastolisch: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.bpd">
+        <option *ngFor="let b of bpd" [ngValue]="b">
+          {{b}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Temperatuur: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.temp">
+        <option *ngFor="let t of temp" [ngValue]="t">
+          {{t}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Glucose: </label>
+      <select style="width: fit-content;" class="form-control" [(ngModel)]="addParam.gluc">
+        <option *ngFor="let g of gluc" [ngValue]="g">
+          {{g}}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Opmerkingen:</label>
+      <textarea style="width: fit-content;" class="form-control" type="text"
+            [(ngModel)]="addParam.opm"></textarea>
+    </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    <button type="button" class="btn btn-outline-dark" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      Annuleren
+    </button>
+    <button type="button" class="btn btn-success" (click)="modal.close('Save click'); add2()">Save</button>
+  </div>
+</ng-template>
+
+<ng-template #content2 let-modal>
+  <div class="modal-body">
+    <h4 class="modal-title" id="modal-basic-title">Verwijderen?</h4>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      Annuleren
+    </button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('verwijderen'); verwijderen()">Verwijderen</button>
   </div>
 </ng-template>
 
