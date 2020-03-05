@@ -1,0 +1,135 @@
+<div class="col-lg-12">
+  <table class="table table-bordered table-striped" matSort (matSortChange)="sortData($event)">
+    <thead>
+      <tr>
+        <th *ngFor="let headerTitle of headerTitles" mat-sort-header="{{headerTitle}}">{{headerTitle}}</th>
+        <th><button type="button" class="btn btn-success" (click)="add()">+</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of sortedData">
+        <td (click)="edit(data.id)">{{data.tijd | date:'H:mm'}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.af">
+            <option *ngFor="let a of af" [ngValue]="a">
+              {{a}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.af}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.hf">
+            <option *ngFor="let h of hf" [ngValue]="h">
+              {{h}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.hf}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.hr">
+            <option *ngFor="let h of hr" [ngValue]="h">
+              {{h}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.hr}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.ah">
+            <option *ngFor="let a of ah" [ngValue]="a">
+              {{a}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.ah}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.sat">
+            <option *ngFor="let s of sat" [ngValue]="s">
+              {{s}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.sat}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.bps">
+            <option *ngFor="let b of bps" [ngValue]="b">
+              {{b}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.bps}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.bpd">
+            <option *ngFor="let b of bpd" [ngValue]="b">
+              {{b}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.bpd}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.temp">
+            <option *ngFor="let t of temp" [ngValue]="t">
+              {{t}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.temp}}</td>
+
+        <td *ngIf="data.id === editRowID">
+          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.gluc">
+            <option *ngFor="let g of gluc" [ngValue]="g">
+              {{g}}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.gluc}}</td>
+
+        <td *ngIf="data.id === editRowID"><textarea style="width: fit-content;" class="form-control" type="text"
+            [(ngModel)]="data.opm"></textarea></td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.opm}}</td>
+
+        <td *ngIf="data.id === editRowID"><input style="width: fit-content;" class="form-control" type="text"
+            [(ngModel)]="data.gebruiker"></td>
+        <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.gebruiker}}</td>
+
+        <td style="width: 20px;">
+          <button type="button" class="btn btn-danger" (click)="verwijderen(data)">X</button>&nbsp;
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="dateOfBirth">Date of birth</label>
+        <div class="input-group">
+          <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>
+</ng-template>
+
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
