@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, HostListener } from '@angular/core';
 import { RouterModule, Routes } from "@angular/router";
 import { TableService } from './table.service';
 import { VitalParameters } from '../models/vital-parameters.model';
 import { Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ToastService } from './toast-service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -23,6 +24,8 @@ export class TableComponent {
   closeResult: string;
   deleteParam: any;
   addParam = new VitalParameters(null, null, null, null, null, null, null, null, null, null, null, null, null);
+  dataSource = new MatTableDataSource(this.sortedData);
+  public keypressed;
 
   hr = [
     null,
@@ -107,7 +110,7 @@ export class TableComponent {
     this._tableService.deleteVitalParameter(this.deleteParam);
     this.tableData = this._tableService.getData();
     this.sortedData = this.tableData.slice();
-    this.toastService.show('Verwijderd!', { classname: 'bg-success text-light', delay: 5000 });
+    this.toastService.show('Verwijderd!', { classname: 'bg-danger text-light', delay: 5000 });
     this.constoptions = { positionClass: 'toast-custom' };
     this.deleteParam = null;
   }
@@ -185,6 +188,14 @@ export class TableComponent {
       return 'by clicking on a backdrop';
     } else {
       return `with: ${reason}`;
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    this.keypressed = event.keyCode;
+    if(32 == this.keypressed){
+      console.log("spatie");
     }
   }
 }

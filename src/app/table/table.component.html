@@ -1,7 +1,7 @@
-<button type="button" class="btn btn-success m-3" style="font-size:24px" (click)="open(content1, null)"><i class="fas fa-file-medical"></i></button>
+<button type="button" class="btn btn-success m-3" style="font-size:24px;" (click)="open(content1, null)"><i class="fas fa-file-medical"></i></button>
 <div class="col-lg-12" style="overflow-x:auto;">
-  <table class="table table-bordered table-striped" matSort (matSortChange)="sortData($event)">
-    <thead>
+  <table #table class="table table-bordered table-striped table-fixed" matSort (matSortChange)="sortData($event)">
+    <thead >
       <tr>
         <th *ngFor="let headerTitle of headerTitles" mat-sort-header="{{headerTitle}}">{{headerTitle}}</th>
         <th><button type="button" class="btn btn-success" (click)="add()"><i class="fa fa-plus"></i></button></th>
@@ -10,9 +10,10 @@
     <tbody>
       <tr *ngFor="let data of sortedData">
         <td (click)="edit(data.id)">{{data.tijd | date:'H:mm'}}</td>
+
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.af">
-            <option *ngFor="let a of af" [ngValue]="a">
+          <select #form1 style="width: fit-content;" class="form-control" [(ngModel)]="data.af">
+            <option *ngFor="let a of af" [value]="a">
               {{a}}
             </option>
           </select>
@@ -20,7 +21,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.af}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.hf">
+          <select #form2 style="width: fit-content;" class="form-control" [(ngModel)]="data.hf">
             <option *ngFor="let h of hf" [ngValue]="h">
               {{h}}
             </option>
@@ -29,7 +30,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.hf}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.hr">
+          <select #for3 style="width: fit-content;" class="form-control" [(ngModel)]="data.hr">
             <option *ngFor="let h of hr" [ngValue]="h">
               {{h}}
             </option>
@@ -38,7 +39,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.hr}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.ah">
+          <select #for4 style="width: fit-content;" class="form-control" [(ngModel)]="data.ah">
             <option *ngFor="let a of ah" [ngValue]="a">
               {{a}}
             </option>
@@ -47,7 +48,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.ah}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.sat">
+          <select #form5 style="width: fit-content;" class="form-control" [(ngModel)]="data.sat">
             <option *ngFor="let s of sat" [ngValue]="s">
               {{s}}
             </option>
@@ -56,7 +57,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.sat}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.bps">
+          <select #form6 style="width: fit-content;" class="form-control" [(ngModel)]="data.bps">
             <option *ngFor="let b of bps" [ngValue]="b">
               {{b}}
             </option>
@@ -65,7 +66,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.bps}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.bpd">
+          <select #form7 style="width: fit-content;" class="form-control" [(ngModel)]="data.bpd">
             <option *ngFor="let b of bpd" [ngValue]="b">
               {{b}}
             </option>
@@ -74,7 +75,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.bpd}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.temp">
+          <select #form8 style="width: fit-content;" class="form-control" [(ngModel)]="data.temp">
             <option *ngFor="let t of temp" [ngValue]="t">
               {{t}}
             </option>
@@ -83,7 +84,7 @@
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.temp}}</td>
 
         <td *ngIf="data.id === editRowID">
-          <select style="width: fit-content;" class="form-control" [(ngModel)]="data.gluc">
+          <select #form9 style="width: fit-content;" class="form-control" [(ngModel)]="data.gluc">
             <option *ngFor="let g of gluc" [ngValue]="g">
               {{g}}
             </option>
@@ -91,11 +92,11 @@
         </td>
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.gluc}}</td>
 
-        <td *ngIf="data.id === editRowID"><textarea style="width: fit-content;" class="form-control" type="text"
+        <td *ngIf="data.id === editRowID"><textarea #form10 style="width: fit-content;" class="form-control" type="text"
             [(ngModel)]="data.opm"></textarea></td>
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.opm}}</td>
 
-        <td *ngIf="data.id === editRowID"><input style="width: fit-content;" class="form-control" type="text"
+        <td *ngIf="data.id === editRowID"><input #form11 style="width: fit-content;" class="form-control" type="text"
             [(ngModel)]="data.gebruiker"></td>
         <td *ngIf="data.id !== editRowID" (click)="edit(data.id)">{{data.gebruiker}}</td>
 

@@ -13,6 +13,7 @@ import { TableService } from './table/table.service';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ToastsContainer } from './table/toast-container.component';
 import { ToastService } from './table/toast-service';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { ToastService } from './table/toast-service';
     FormsModule,
     MatSortModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    MatSelectModule
   ],
   providers: [TableService, ToastService],
   bootstrap: [AppComponent]
