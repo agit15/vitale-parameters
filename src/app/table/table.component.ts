@@ -26,6 +26,8 @@ export class TableComponent {
   addParam = new VitalParameters(null, null, null, null, null, null, null, null, null, null, null, null, null);
   dataSource = new MatTableDataSource(this.sortedData);
   public keypressed;
+  page = 1;
+  pageSize = 12;
 
   hr = [
     null,
@@ -136,6 +138,10 @@ export class TableComponent {
     this.sortedData = this.tableData.slice();
     this.addParam = new VitalParameters(null, null, null, null, null, null, null, null, null, null, null, null, null);
     this.toastService.show('Toegevoegd!', { classname: 'bg-success text-light', delay: 5000 });
+  }
+
+  toast(){
+    this.toastService.show('Opgeslagen!', { classname: 'bg-success text-light', delay: 2000 });
   }
 
   edit(val) {
