@@ -14,6 +14,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ToastsContainer } from './table/toast-container.component';
 import { ToastService } from './table/toast-service';
 import {MatSelectModule} from '@angular/material/select';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import {MatSelectModule} from '@angular/material/select';
     MatSortModule,
     ReactiveFormsModule,
     NgbModule,
-    MatSelectModule
+    MatSelectModule,
+    MatPaginatorModule,
+    Ng2SearchPipeModule
   ],
   providers: [TableService, ToastService],
   bootstrap: [AppComponent]

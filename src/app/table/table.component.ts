@@ -6,6 +6,7 @@ import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ToastService } from './toast-service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-table',
@@ -17,10 +18,10 @@ export class TableComponent {
   headerTitles: string[];
   showEditTable: boolean = false;
   editRowID: any = '';
-  selectedValue = null;
+  selectedValue: any;
   idAdd: number;
   sortedData: VitalParameters[];
-  constoptions;
+  constoptions: any;
   closeResult: string;
   deleteParam: any;
   addParam = new VitalParameters(null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -28,6 +29,13 @@ export class TableComponent {
   public keypressed;
   page = 1;
   pageSize = 12;
+  mobile: any;
+  innerWidth: any;
+  openFilter: any;
+  clicked = false;
+  weergevenValue = "gebruiker";
+  gebruiker = "Agit";
+  searchText: any;
 
   hr = [
     null,
@@ -109,12 +117,14 @@ export class TableComponent {
   }
 
   verwijderen() {
-    this._tableService.deleteVitalParameter(this.deleteParam);
+    this._tableService.deleteVitalParameter(this.selectedValue);
     this.tableData = this._tableService.getData();
     this.sortedData = this.tableData.slice();
     this.toastService.show('Verwijderd!', { classname: 'bg-danger text-light', delay: 5000 });
     this.constoptions = { positionClass: 'toast-custom' };
     this.deleteParam = null;
+    this.editRowID = null;
+    this.clicked = false;
   }
 
   add() {
@@ -125,6 +135,10 @@ export class TableComponent {
     this.tableData = this._tableService.getData();
     this.sortedData = this.tableData.slice();
     this.edit(this.idAdd);
+  }
+
+  hfSelected(waarde, param) {
+    this.selectedValue[param] = waarde;
   }
 
   add2() {
@@ -140,15 +154,47 @@ export class TableComponent {
     this.toastService.show('Toegevoegd!', { classname: 'bg-success text-light', delay: 5000 });
   }
 
-  toast(){
+  toast() {
     this.toastService.show('Opgeslagen!', { classname: 'bg-success text-light', delay: 2000 });
   }
 
-  edit(val) {
-    this.editRowID = val;
+  edit(data) {
+    if (data.gebruiker == this.gebruiker) {
+      this.editRowID = data.id;
+      this.selectedValue = data;
+    }
+
+  }
+
+  onSelect(data): void {
+    this.selectedValue = data;
+    console.log(this.selectedValue)
+    this.clicked = true;
+  }
+
+  weergeven(headerTitle) {
+    console.log(headerTitle.toLowerCase());
+    //this.selectedValue[headerTitle.toLowerCase()];
+    this.weergevenValue = headerTitle.toLowerCase();
+    
+  }
+
+  update() {
+    this.editRowID = null;
+    this.toast();
+    this.clicked = false;
+  }
+
+  toggleFilter() {
+    if (this.openFilter == true) {
+      this.openFilter = false;
+    } else {
+      this.openFilter = true;
+    }
   }
 
   sortData(sort: Sort) {
+    console.log(sort.active);
     const data = this.tableData.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedData = data;
@@ -156,7 +202,7 @@ export class TableComponent {
     }
 
     this.sortedData = data.sort((a, b) => {
-      const isAsc = sort.direction === 'asc';
+      const isAsc = true;
       switch (sort.active) {
         case 'Tijd': return compare(a.tijd, b.tijd, isAsc);
         case 'AF': return compare(a.af, b.af, isAsc);
@@ -175,10 +221,8 @@ export class TableComponent {
     });
   }
 
-  open(content, data) {
-    if (data != null) {
-      this.deleteParam = data;
-    }
+  open(content) {
+    console.log(this.editRowID);
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -197,11 +241,37 @@ export class TableComponent {
     }
   }
 
-  @HostListener('window:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    this.keypressed = event.keyCode;
-    if(32 == this.keypressed){
-      console.log("spatie");
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.innerWidth = window.innerWidth;
+    if (innerWidth <= 425) { // 768px portrait
+      this.mobile = true;
+    } else {
+      this.mobile = false;
+    }
+  }
+
+  ngOnInit() {
+    if (innerWidth <= 425) { // 768px portrait
+      this.mobile = true;
+    }
+  }
+
+  terug() {
+    this.clicked = false;
+    this.selectedValue = null;
+  }
+
+  // MatPaginator Inputs
+  length = 100;
+  pageSizeOptions: number[] = [5, 10, 25, 100];
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+
+  setPageSizeOptions(setPageSizeOptionsInput: string) {
+    if (setPageSizeOptionsInput) {
+      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
     }
   }
 }
