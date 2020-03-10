@@ -36,6 +36,9 @@ export class TableComponent {
   weergevenValue = "gebruiker";
   gebruiker = "Agit";
   searchText: any;
+  sortedValue: any;
+  sort: Sort = {active: "", direction: ""};
+  checked = true;
 
   hr = [
     null,
@@ -92,7 +95,6 @@ export class TableComponent {
     null,
     80,
     85,
-    85,
     105,
   ]
 
@@ -137,7 +139,7 @@ export class TableComponent {
     this.edit(this.idAdd);
   }
 
-  hfSelected(waarde, param) {
+  selected(waarde: any, param: string) {
     this.selectedValue[param] = waarde;
   }
 
@@ -174,7 +176,7 @@ export class TableComponent {
 
   weergeven(headerTitle) {
     console.log(headerTitle.toLowerCase());
-    //this.selectedValue[headerTitle.toLowerCase()];
+    
     this.weergevenValue = headerTitle.toLowerCase();
     
   }
@@ -183,6 +185,7 @@ export class TableComponent {
     this.editRowID = null;
     this.toast();
     this.clicked = false;
+    this.selectedValue = null;
   }
 
   toggleFilter() {
@@ -193,8 +196,28 @@ export class TableComponent {
     }
   }
 
+  mobileSortData(headerTitle: any){
+    this.sortedValue = headerTitle;
+    this.sort.active = headerTitle;
+    console.log(this.sort.direction);
+    
+    switch(this.sort.direction){
+      case "asc":
+        this.sort.direction = "desc"
+        break;
+      case "desc":
+        this.sort.direction = "";
+        this.sortedValue = "";
+        break;
+      case "":
+        this.sort.direction = "asc";
+        break;
+    }
+    this.sortData(this.sort);
+  }
+
   sortData(sort: Sort) {
-    console.log(sort.active);
+    console.log(sort);
     const data = this.tableData.slice();
     if (!sort.active || sort.direction === '') {
       this.sortedData = data;
@@ -202,7 +225,7 @@ export class TableComponent {
     }
 
     this.sortedData = data.sort((a, b) => {
-      const isAsc = true;
+      const isAsc = sort.direction === 'asc';
       switch (sort.active) {
         case 'Tijd': return compare(a.tijd, b.tijd, isAsc);
         case 'AF': return compare(a.af, b.af, isAsc);
@@ -260,19 +283,6 @@ export class TableComponent {
   terug() {
     this.clicked = false;
     this.selectedValue = null;
-  }
-
-  // MatPaginator Inputs
-  length = 100;
-  pageSizeOptions: number[] = [5, 10, 25, 100];
-
-  // MatPaginator Output
-  pageEvent: PageEvent;
-
-  setPageSizeOptions(setPageSizeOptionsInput: string) {
-    if (setPageSizeOptionsInput) {
-      this.pageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
-    }
   }
 }
 

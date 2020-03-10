@@ -56,7 +56,12 @@
     padding: 14px;
     text-decoration: none;
   }
-  
-  div.scrollmenu a:hover {
-    background-color: #777;
+
+  html {
+    scroll-behavior: smooth;
   }
+
+  .grayout {
+    opacity: 0.6; /* Real browsers */
+    filter: alpha(opacity = 60); /* MSIE */
+}

@@ -105,8 +105,8 @@
 
           <td *ngIf="data.id === editRowID"><input #form11 style="width: fit-content;" class="form-control" type="text"
               [(ngModel)]="data.gebruiker"></td>
-          <td *ngIf="data.id !== editRowID" (click)="edit(data)">{{data.gebruiker}} <i *ngIf="data.gebruiker == gebruiker"
-            class="fas fa-pencil-alt"></i></td>
+          <td *ngIf="data.id !== editRowID" (click)="edit(data)">{{data.gebruiker}} <i
+              *ngIf="data.gebruiker == gebruiker" class="fas fa-pencil-alt"></i></td>
         </tr>
       </tbody>
 
@@ -243,30 +243,34 @@
         <h2 class="ml-2">Filters </h2>
       </div>
       <div class="col" style="text-align: right;">
-        <p><i *ngIf="!openFilter" style="font-size: 24px; text-align: right;" class="fas fa-arrow-down"></i><i
-            *ngIf="openFilter" style="font-size: 24px; text-align: right;" class="fas fa-arrow-up"></i></p>
+        <p class="mt-2"><i *ngIf="!openFilter" style="font-size: 24px; text-align: right;"
+            class="fas fa-arrow-down"></i><i *ngIf="openFilter" style="font-size: 24px; text-align: right;"
+            class="fas fa-arrow-up"></i></p>
       </div>
     </div>
     <div class="ml-2 mr-2" *ngIf="openFilter">
       <label>Zoeken: </label> <input [(ngModel)]="searchText" class="form-control">
       <label>Weergeven: </label>
       <div class="scrollmenu mb-2">
-        <a *ngFor="let headerTitle of headerTitles | slice:1; let i = index;" (click)="weergeven(headerTitle)" [ngStyle]="{backgroundColor: headerTitle==weergevenValue ? 'grey' : ''}">
+        <a *ngFor="let headerTitle of headerTitles | slice:1; let i = index;" (click)="weergeven(headerTitle)"
+          [ngStyle]="{backgroundColor: headerTitle.toLowerCase()==weergevenValue ? 'grey' : ''}">
           {{headerTitle}}
         </a>
       </div>
       <label>Sorteren op: </label>
       <div class="scrollmenu">
-        <a *ngFor="let headerTitle of headerTitles" matSort (click)="sortData(headerTitle)">
+        <a *ngFor="let headerTitle of headerTitles" matSort (click)="mobileSortData(headerTitle)"
+          [ngStyle]="{backgroundColor: headerTitle==sortedValue ? 'grey' : ''}">
           {{headerTitle}}
         </a>
       </div>
     </div>
-    <h2 class="ml-2">Parameters:</h2>
+    <h2 class="ml-2">Parameters: {{weergevenValue}}</h2>
     <ul class="parameters">
-      <li *ngFor="let data of sortedData | filter : searchText" [class.selected]="data === selectedValue" (click)="data.gebruiker != gebruiker || onSelect(data)">
-        <span class="badge">{{data.tijd | date:'H:mm'}}</span> {{data[weergevenValue]}} <i *ngIf="data.gebruiker == gebruiker"
-          class="fas fa-pencil-alt"></i>
+      <li *ngFor="let data of sortedData | filter : searchText" [class.selected]="data === selectedValue"
+        (click)="data.gebruiker != gebruiker || onSelect(data)">
+        <span class="badge">{{data.tijd | date:'H:mm'}}</span> {{data[weergevenValue]}} <i
+          *ngIf="data.gebruiker == gebruiker" class="fas fa-pencil-alt"></i>
       </li>
     </ul>
     <mat-paginator [length]="2" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]">
@@ -276,20 +280,12 @@
 
 <div *ngIf="mobile && clicked">
   <div class="ml-3 mr-3" *ngIf="selectedValue">
-    <div class="mt-2">
-      <button type="button" class="btn btn-primary mr-2" style="font-size:24px;" (click)="terug()"><i
-          style="font-size: 24px; text-align: right;" class="fas fa-arrow-left"></i></button>
-      <button type="button" style="font-size:24px;" class="btn btn-success mr-2" (click)="update()"><i
-          class="fas fa-clipboard-check"></i></button>
-      <button type="button" style="font-size:24px;" class="btn btn-danger" (click)="open(content2)"><i
-          class="fas fa-file-excel"></i></button>
-    </div>
     <h2>Details</h2>
-
     <div class="form-group">
       <label>Ademhalingsfrequentie: </label>
       <div class="scrollmenu">
-        <a *ngFor="let a of af" (click)="hfSelected(a, 'af')" [ngStyle]="{backgroundColor: a==selectedValue.af ? 'grey' : ''}">
+        <a *ngFor="let a of af" (click)="selected(a, 'af')"
+          [ngStyle]="{backgroundColor: a==selectedValue.af ? 'grey' : ''}">
           {{a}}
         </a>
       </div>
@@ -298,7 +294,9 @@
     <div class="form-group">
       <label>Hartfrequentie: </label>
       <div class="scrollmenu">
-        <a *ngFor="let h of hf" (click)="hfSelected(h, 'hf')" [ngStyle]="{backgroundColor: h==selectedValue.hf ? 'grey' : ''}">
+        <a *ngFor="let h of hf" (click)="selected(h, 'hf')"
+          [ngStyle]="{backgroundColor: h==selectedValue.hf ? 'grey' : ''}"
+          id="{{h==selectedValue.hf ? 'testId' : 'nope'}}">
           {{h}}
         </a>
       </div>
@@ -306,75 +304,90 @@
 
     <div class="form-group">
       <label>Hartritme: </label>
-      <select style="width: fit-content;" class="form-control" [(ngModel)]="selectedValue.hr">
-        <option *ngFor="let h of hr" [ngValue]="h">
+      <div class="scrollmenu">
+        <a *ngFor="let h of hr" (click)="selected(h, 'hr')"
+          [ngStyle]="{backgroundColor: h==selectedValue.hr ? 'grey' : ''}"
+          id="{{h==selectedValue.hr ? 'testId' : 'nope'}}">
           {{h}}
-        </option>
-      </select>
+        </a>
+      </div>
     </div>
 
     <div class="form-group">
       <label>Ademhaling: </label>
-      <select style="width: fit-content;" class="form-control" [(ngModel)]="selectedValue.ah">
-        <option *ngFor="let a of ah" [ngValue]="a">
+      <div class="scrollmenu">
+        <a *ngFor="let a of ah" (click)="selected(a, 'ah')"
+          [ngStyle]="{backgroundColor: a==selectedValue.ah ? 'grey' : ''}"
+          id="{{a==selectedValue.ah ? 'testId' : 'nope'}}">
           {{a}}
-        </option>
-      </select>
+        </a>
+      </div>
     </div>
 
     <div class="form-group">
       <label>Saturatie: </label>
-      <select style="width: fit-content;" class="form-control" [(ngModel)]="selectedValue.sat">
-        <option *ngFor="let s of sat" [ngValue]="s">
+      <div class="scrollmenu">
+        <a *ngFor="let s of sat" (click)="selected(s, 'sat')"
+          [ngStyle]="{backgroundColor: s==selectedValue.sat ? 'grey' : ''}"
+          id="{{s==selectedValue.sat ? 'testId' : 'nope'}}">
           {{s}}
-        </option>
-      </select>
+        </a>
+      </div>
     </div>
 
     <div class="form-group">
       <label>Bloeddruk Systolisch: </label>
-      <select style="width: fit-content;" class="form-control" [(ngModel)]="selectedValue.bps">
-        <option *ngFor="let b of bps" [ngValue]="b">
+      <div class="scrollmenu">
+        <a *ngFor="let b of bps" (click)="selected(b, 'bps')" [ngStyle]="{backgroundColor: b==selectedValue.bps ? 'grey' : ''}" id="{{b==selectedValue.bps ? 'testId' : 'nope'}}">
           {{b}}
-        </option>
-      </select>
+        </a>
+      </div>
     </div>
 
     <div class="form-group">
-      <label>Bloeddruk Diastolisch: </label>
-      <select style="width: fit-content;" class="form-control" [(ngModel)]="selectedValue.bpd">
-        <option *ngFor="let b of bpd" [ngValue]="b">
+      <label>Bloeddruk Diastolisch: <input type="checkbox" checked (change)="checked = !checked"></label>
+      <div *ngIf="checked" class="scrollmenu">
+        <a *ngFor="let b of bpd" (click)="selected(b, 'bpd')" [ngStyle]="{backgroundColor: b==selectedValue.bpd ? 'grey' : ''}" id="{{b==selectedValue.bpd ? 'testId' : 'nope'}}">
           {{b}}
-        </option>
-      </select>
+        </a>
+      </div>
     </div>
 
     <div class="form-group">
       <label>Temperatuur: </label>
-      <select style="width: fit-content;" class="form-control" [(ngModel)]="selectedValue.temp">
-        <option *ngFor="let t of temp" [ngValue]="t">
+      <div class="scrollmenu">
+        <a *ngFor="let t of temp" (click)="selected(t, 'temp')" [ngStyle]="{backgroundColor: t==selectedValue.temp ? 'grey' : ''}" id="{{t==selectedValue.temp ? 'testId' : 'nope'}}">
           {{t}}
-        </option>
-      </select>
+        </a>
+      </div>
     </div>
 
     <div class="form-group">
       <label>Glucose: </label>
-      <select style="width: fit-content;" class="form-control" [(ngModel)]="selectedValue.gluc">
-        <option *ngFor="let g of gluc" [ngValue]="g">
+      <div class="scrollmenu">
+        <a *ngFor="let g of gluc" (click)="selected(g, 'gluc')" [ngStyle]="{backgroundColor: g==selectedValue.gluc ? 'grey' : ''}" id="{{g==selectedValue.gluc ? 'testId' : 'nope'}}">
           {{g}}
-        </option>
-      </select>
+        </a>
+      </div>
     </div>
 
     <div class="form-group">
       <label>Opmerkingen:</label>
-      <textarea style="width: fit-content;" class="form-control" type="text" [(ngModel)]="selectedValue.opm"></textarea>
+      <textarea class="form-control" type="text" [(ngModel)]="selectedValue.opm"></textarea>
     </div>
 
     <div class="form-group">
       <label>Gebruiker:</label>
-      <input class="form-control" [(ngModel)]="selectedValue.gebruiker">
+      <input class="form-control" readonly [(ngModel)]="selectedValue.gebruiker">
+    </div>
+
+    <div class="mt-2">
+      <button type="button" class="btn bg-dark mr-2" style="font-size:24px; color: white;" (click)="terug()"><i
+          style="font-size: 24px; text-align: right;" class="fas fa-arrow-left"></i></button>
+      <button type="button" style="font-size:24px;" class="btn btn-success mr-2" (click)="update()"><i
+          class="fas fa-clipboard-check"></i></button>
+      <button type="button" style="font-size:24px;" class="btn btn-danger" (click)="open(content2)"><i
+          class="fas fa-file-excel"></i></button>
     </div>
   </div>
 </div>
