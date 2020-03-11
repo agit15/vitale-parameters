@@ -267,7 +267,7 @@ export class TableComponent {
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.innerWidth = window.innerWidth;
-    if (innerWidth <= 425) { // 768px portrait
+    if (innerWidth <= 768) { // 768px portrait
       this.mobile = true;
     } else {
       this.mobile = false;
@@ -275,7 +275,7 @@ export class TableComponent {
   }
 
   ngOnInit() {
-    if (innerWidth <= 425) { // 768px portrait
+    if (innerWidth <= 768) { // 768px portrait
       this.mobile = true;
     }
   }
